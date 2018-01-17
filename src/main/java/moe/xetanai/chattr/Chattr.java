@@ -6,6 +6,7 @@ import moe.xetanai.chattr.listeners.PMRelay;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
@@ -36,6 +37,7 @@ public class Chattr {
 			Chattr.API = new JDABuilder(AccountType.BOT).setToken(config.getString("token"))
 					.addEventListener(new CommandListener())
 					.addEventListener(new PMRelay())
+					.setStatus(OnlineStatus.IDLE)
 					.buildAsync();
 		} catch (IOException | JSONException err) {
 			logger.error("Failed to load config.", err);
@@ -46,6 +48,7 @@ public class Chattr {
 		}
 
 		registerCommands();
+		Chattr.API.getPresence().setStatus(OnlineStatus.ONLINE);
 	}
 
 	private static void registerCommands() {
