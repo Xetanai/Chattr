@@ -1,5 +1,6 @@
 package moe.xetanai.chattr;
 
+import moe.xetanai.chattr.commands.*;
 import moe.xetanai.chattr.listeners.CommandListener;
 import moe.xetanai.chattr.listeners.PMRelay;
 import net.dv8tion.jda.core.AccountType;
@@ -18,6 +19,8 @@ import java.io.IOException;
 
 public class Chattr {
 	private static final Logger logger = LoggerFactory.getLogger("Chattr");
+
+	public static final long DEVID = 155490847494897664L;
 	public static JDA API;
 
 	public static void main(String[] args) {
@@ -41,5 +44,15 @@ public class Chattr {
 			logger.error("Failed to login.", err);
 			System.exit(2);
 		}
+
+		registerCommands();
+	}
+
+	private static void registerCommands() {
+		new CmdSearch().registerCommand();
+		new Help().registerCommand();
+		new Report().registerCommand();
+		new Reveal().registerCommand();
+		new StopSearch().registerCommand();
 	}
 }
