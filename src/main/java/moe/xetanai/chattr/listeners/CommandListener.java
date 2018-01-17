@@ -12,72 +12,72 @@ public class CommandListener extends ListenerAdapter {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		String content = event.getMessage().getContentRaw();
-		if(!content.startsWith(Chattr.API.getSelfUser().getAsMention())) {return;} // Not a command.
-		if(event.getAuthor().isBot()) {return;}
+		if (!content.startsWith(Chattr.API.getSelfUser().getAsMention())) {return;} // Not a command.
+		if (event.getAuthor().isBot()) {return;}
 
 		String[] args = content.split(" ");
 
-		if(args.length == 1 || args[1].equals("help")) {
+		if (args.length == 1 || args[1].equals("help")) {
 			event.getChannel().sendMessage("You can use any of these commands:\n" +
 					"\thelp - Show this list.\n" +
 					"\tsearch <Interests..> - Search for a chat with similar interests.\n" +
 					"\tstop - Stop searching.\n" +
 					"\treveal - (In conversation) Reveal your username and discriminator/tag to your partner.\n" +
 					"\treport - (In conversation) Report your partner.").queue();
-		} else if(args[1].equals("search")) {
+		} else if (args[1].equals("search")) {
 			Search s = null;
 			s = Matchmaker.getSearchForUser(event.getAuthor());
-			if(s != null) {
+			if (s != null) {
 				event.getChannel().sendMessage("You're already searching for a conversation.").queue();
 				return;
 			}
 
-			String[] interests = new String[args.length-2];
-			System.arraycopy(args,2,interests,0,interests.length);
+			String[] interests = new String[args.length - 2];
+			System.arraycopy(args, 2, interests, 0, interests.length);
 
 			s = new Search(event.getAuthor(), interests);
 			s.start();
-			event.getChannel().sendMessage("Starting your search with "+ interests.length +" interests.").queue();
-		} else if(args[1].equals("stop")) {
+			event.getChannel().sendMessage("Starting your search with " + interests.length + " interests.").queue();
+		} else if (args[1].equals("stop")) {
 			Conversation c = Matchmaker.getConversationForUser(event.getAuthor());
-			if(c != null) {
+			if (c != null) {
 				c.stop(event.getAuthor());
 				return;
 			}
 
 			Search s = null;
 			s = Matchmaker.getSearchForUser(event.getAuthor());
-			if(s == null) {
+			if (s == null) {
 				event.getChannel().sendMessage("You weren't searching anyways.").queue();
 				return;
 			}
 
 			s.stop();
 			event.getChannel().sendMessage("Stopped your search.").queue();
-		} else if(args[1].equals("reveal")) {
+		} else if (args[1].equals("reveal")) {
 			User author = event.getAuthor();
 			Conversation c = Matchmaker.getConversationForUser(author);
-			if(c == null) return;
-			if(c.isRevealed()) {
+			if (c == null) return;
+			if (c.isRevealed()) {
 				c.sendSystemMessage("This conversation has already been revealed. No going back!", author);
 				return;
 			}
 
 			c.toggleReveal(author);
 
-			if(c.isUserRevealed(author)) {
-				c.sendSystemMessage("%USER"+ c.getUserNum(author) +"% voted to reveal!", null);
+			if (c.isUserRevealed(author)) {
+				c.sendSystemMessage("%USER" + c.getUserNum(author) + "% voted to reveal!", null);
 			} else {
-				c.sendSystemMessage("%USER"+ c.getUserNum(author) +"% cancelled the reveal vote.", null);
+				c.sendSystemMessage("%USER" + c.getUserNum(author) + "% cancelled the reveal vote.", null);
 			}
 
-			if(c.isRevealed()) {
+			if (c.isRevealed()) {
 				c.sendPartnerInfo(null);
 			}
-		} else if(args[1].equals("report")) {
+		} else if (args[1].equals("report")) {
 			User author = event.getAuthor();
 			Conversation c = Matchmaker.getConversationForUser(author);
-			if(c == null) return;
+			if (c == null) return;
 
 			c.togglePendingCase(author);
 			c.stop(author);

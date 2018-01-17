@@ -16,7 +16,7 @@ public class Search {
 
 	public Search(User user, List<String> interests) {
 		List<String> lower = new ArrayList<>();
-		for(String i : interests) {
+		for (String i : interests) {
 			lower.add(i.toLowerCase()); // Convert all interests to lowercase
 		}
 
@@ -29,31 +29,31 @@ public class Search {
 	}
 
 	public User getUser() {
-		return user;
+		return this.user;
 	}
 
 	public List<String> getInterests() {
-		return interests;
+		return this.interests;
 	}
 
 	public long getStartTime() {
-		return startTime;
+		return this.startTime;
 	}
 
 	public void setStartTime() {
-		startTime = new Date().getTime();
+		this.startTime = new Date().getTime();
 	}
 
 	/* CONVENIENCE METHODS */
 
 	public long getSearchTime() {
-		return new Date().getTime() - getStartTime();
+		return new Date().getTime() - this.getStartTime();
 	}
 
 	public double getMinimumCompatibility() {
-		if(interests.isEmpty())
+		if (this.interests.isEmpty())
 			return 0d;
-		return 1-(getSearchTime()/MAXTIME);
+		return 1 - (this.getSearchTime() / MAXTIME);
 	}
 
 	public double getCompatibility(Search partner) {
@@ -61,12 +61,12 @@ public class Search {
 		mixed.removeAll(partner.getInterests()); // Remove possible duplicate/shared interests
 		mixed.addAll(partner.getInterests()); // Merge the interests
 
-		if(mixed.size() == 0)
+		if (mixed.size() == 0)
 			return 1d; // Two blank interest users will always match.
 
 		int matched = 0; // Total common interests
 		for (String i : mixed) { // Loop over every interest
-			if(this.interests.contains(i) && partner.getInterests().contains(i)) {
+			if (this.interests.contains(i) && partner.getInterests().contains(i)) {
 				matched++; // Add 1 if both like this interest
 			}
 		}
@@ -75,12 +75,14 @@ public class Search {
 	}
 
 	public void start() {
-		setStartTime();
+		this.setStartTime();
 		Matchmaker.addSearch(this);
 		Matchmaker.SearchFor(this);
 	}
 
 	public void stop() {
 		Matchmaker.stopSearch(this);
-	};
+	}
+
+	;
 }
