@@ -48,6 +48,7 @@ public class Chattr {
 		}
 
 		registerCommands();
+		Matchmaker.start();
 		Chattr.API.getPresence().setStatus(OnlineStatus.ONLINE);
 	}
 

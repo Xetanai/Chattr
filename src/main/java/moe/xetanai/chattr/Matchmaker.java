@@ -3,33 +3,39 @@ package moe.xetanai.chattr;
 import moe.xetanai.chattr.entities.Conversation;
 import moe.xetanai.chattr.entities.Search;
 import net.dv8tion.jda.core.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Matchmaker {
 	private static final long MAXTIME = 30000; // 30 seconds
-	private static final List<Search> searches = new ArrayList<>();
+	private static final List<Search> searches = new CopyOnWriteArrayList<>();
 	private static final List<Conversation> conversations = new ArrayList<>();
+	private static final Logger log = LoggerFactory.getLogger("Matchmaker");
+
+	private static final Thread passiveMatchmaker = new Thread(() -> {
+		boolean interrupted = false;
+		log.info("Passive matchmaker thread started.");
+		while (!interrupted) {
+			run();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException err) {
+				log.error("Matchmaker thread was interrupted! Passive matchmaking may fail.", err);
+				interrupted = true;
+			}
+		}
+
+		Thread.currentThread().interrupt();
+	});
 
 	private Matchmaker() {}
 
-	public static boolean SearchFor(Search priority) {
-		double minCompat = priority.getMinimumCompatibility();
-
-		for (Search s : searches) {
-			if (s.equals(priority))
-				continue; // Skip self in list.
-			double partnerMinCompat = s.getMinimumCompatibility();
-			double compat = priority.getCompatibility(s);
-
-			if (compat >= minCompat && compat >= partnerMinCompat) {
-				// These users are sufficiently compatible.
-				startConversation(priority, s);
-				return true;
-			}
-		}
-		return false;
+	public static void start() {
+		passiveMatchmaker.start();
 	}
 
 	public static void addSearch(Search s) {
@@ -48,13 +54,11 @@ public class Matchmaker {
 
 		if (c.getMutualInterests().isEmpty()) {
 			String msg = "We couldn't find anyone who shares any interests with you :(\nTry again later. For now, here's someone random!";
-			if (!u1.getInterests().isEmpty())
+			if (!u1.getInterests().isEmpty()) // Send condolences to anyone who was looking with interests.
 				c.sendSystemMessage(msg, u1.getUser());
 			if (!u2.getInterests().isEmpty())
 				c.sendSystemMessage(msg, u2.getUser());
 		}
-		searches.remove(u1);
-		searches.remove(u2);
 		return c;
 	}
 
@@ -78,5 +82,37 @@ public class Matchmaker {
 		}
 
 		return null;
+	}
+
+	private static void run() {
+		List<Search> completedMatches = new ArrayList<>(); // List of completed matches.
+		// Because searches is a CopyOnWriteArrayList, this entire run would not reflect changes and could cause some funny business.
+
+		for (Search s : searches) {
+			if (completedMatches.contains(s)) {
+				continue;
+			} // We've already matched this user in this run. Awaiting removal.
+
+			double minCompat = s.getMinimumCompatibility();
+
+			for (Search p : searches) {
+				if (completedMatches.contains(p)) {
+					continue;
+				} // We've already matched this user in this run. Awaiting removal.
+
+				if (s.equals(p)) {continue;} // Skip self
+				double partnerMinCompat = p.getMinimumCompatibility();
+				double compat = s.getCompatibility(p);
+
+				if (compat >= minCompat && compat >= partnerMinCompat) {
+					// These users are sufficiently compatible.
+					startConversation(s, p);
+					completedMatches.add(s);
+					completedMatches.add(p);
+				}
+			}
+		}
+
+		searches.removeAll(completedMatches); // Remove completed matches from the search queue now that we're finished iterating.
 	}
 }

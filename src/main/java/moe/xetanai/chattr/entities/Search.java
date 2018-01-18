@@ -77,7 +77,6 @@ public class Search {
 	public void start() {
 		this.setStartTime();
 		Matchmaker.addSearch(this);
-		Matchmaker.SearchFor(this);
 	}
 
 	public void stop() {
