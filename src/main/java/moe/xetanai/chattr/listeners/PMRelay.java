@@ -5,9 +5,22 @@ import moe.xetanai.chattr.Matchmaker;
 import moe.xetanai.chattr.entities.Conversation;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.core.events.user.UserTypingEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class PMRelay extends ListenerAdapter {
+
+	@Override
+	public void onUserTyping(UserTypingEvent event) {
+		User author = event.getUser();
+		Conversation c = Matchmaker.getConversationForUser(author);
+
+		if (c == null) {return;}
+
+		int num = c.getUserNum(author);
+		User partner = num == 1 ? c.getUser2() : c.getUser1();
+		partner.openPrivateChannel().complete().sendTyping().queue();
+	}
 
 	@Override
 	public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
