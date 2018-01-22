@@ -50,7 +50,7 @@ public class Matchmaker {
 		Conversation c = new Conversation(u1, u2);
 		conversations.add(c);
 		c.sendSystemMessage("Found a match! You share " + c.getMutualInterests().size() + " interests:\n" +
-				c.getMutualInterestsAsString(), null);
+				ChattrUtils.joinList(", ", c.getMutualInterests(), 10), null);
 
 		if (c.getMutualInterests().isEmpty()) {
 			String msg = "We couldn't find anyone who shares any interests with you :(\nTry again later. For now, here's someone random!";

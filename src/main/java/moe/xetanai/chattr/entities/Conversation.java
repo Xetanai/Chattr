@@ -1,6 +1,7 @@
 package moe.xetanai.chattr.entities;
 
 import moe.xetanai.chattr.Chattr;
+import moe.xetanai.chattr.ChattrUtils;
 import moe.xetanai.chattr.Matchmaker;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -118,23 +119,6 @@ public class Conversation {
 		return this.mutualInterests;
 	}
 
-	public String getMutualInterestsAsString() {
-		String compiled = "";
-		for (int i = 0; i < this.mutualInterests.size() && i < 10; i++) {
-			if (i != 0) {
-				compiled += ", ";
-			}
-
-			compiled += this.mutualInterests.get(i);
-
-			if (i == 9) {
-				compiled += ", and " + (this.mutualInterests.size() - 10) + " other(s)";
-			}
-		}
-
-		return compiled;
-	}
-
 	/* CONVENIENCE METHODS */
 
 	public void sendSystemMessage(String msg, User specific) {
@@ -174,7 +158,7 @@ public class Conversation {
 		MessageEmbed m = new EmbedBuilder()
 				.setTitle(target.getName() + "#" + target.getDiscriminator())
 				.setImage(target.getEffectiveAvatarUrl())
-				.addField("Shared interests", this.getMutualInterestsAsString(), true).build();
+				.addField("Shared interests", ChattrUtils.joinList(", ", this.getMutualInterests(), 10), true).build();
 
 		requester.openPrivateChannel().complete().sendMessage(m).queue();
 	}
