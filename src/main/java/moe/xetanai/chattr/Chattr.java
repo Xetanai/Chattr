@@ -1,3 +1,19 @@
+/*
+ *     Copyright 2017-2018 Julia L Rogers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package moe.xetanai.chattr;
 
 import moe.xetanai.chattr.commands.*;
@@ -23,11 +39,10 @@ public class Chattr {
 
 	public static final long DEVID = 155490847494897664L;
 	public static JDA API;
+	public static JSONObject RAWCFG = null;
 
 	public static void main(String[] args) {
 		logger.info("Starting Chattr.");
-
-		JSONObject config = null;
 		if (ChattrInfo.isDevVersion()) {
 			logger.info("DEVELOPMENT MODE");
 			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
@@ -36,9 +51,9 @@ public class Chattr {
 		try {
 			String configfile = FileUtils.readFileToString(new File("config.json"), "UTF-8");
 
-			config = new JSONObject(configfile);
+			RAWCFG = new JSONObject(configfile);
 
-			Chattr.API = new JDABuilder(AccountType.BOT).setToken(config.getString("token"))
+			Chattr.API = new JDABuilder(AccountType.BOT).setToken(RAWCFG.getString("token"))
 					.addEventListener(new CommandListener())
 					.addEventListener(new PMRelay())
 					.setStatus(OnlineStatus.IDLE)
@@ -62,5 +77,7 @@ public class Chattr {
 		new Report().registerCommand();
 		new Reveal().registerCommand();
 		new StopSearch().registerCommand();
+		new Info().registerCommand();
+		new Invite().registerCommand();
 	}
 }
