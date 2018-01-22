@@ -8,21 +8,19 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Command {
 	public static List<Command> REGISTRY = new ArrayList<>();
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	public final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final String keyword;
 	private final String helpLine;
 	private int inConv = -1;
 	private boolean developerOnly = false;
 
-	public Command(@Nonnull String keyword, @Nonnull String helpLine, CmdFlag... flags) {
+	public Command(String keyword, String helpLine, CmdFlag... flags) {
 		this.keyword = keyword;
 		this.helpLine = helpLine;
 
@@ -54,10 +52,9 @@ public abstract class Command {
 
 	public int getConvReq() {return this.inConv;}
 
-	@Nullable
-	public abstract MessageBuilder run(@Nonnull MessageReceivedEvent e, @Nonnull MessageBuilder mb);
+	public abstract MessageBuilder run(MessageReceivedEvent e, MessageBuilder mb);
 
-	public void invoke(@Nonnull MessageReceivedEvent e) {
+	public void invoke(MessageReceivedEvent e) {
 		MessageBuilder res = new MessageBuilder();
 		User author = e.getAuthor();
 		Conversation conv = Matchmaker.getConversationForUser(author);
@@ -87,7 +84,7 @@ public abstract class Command {
 		}
 	}
 
-	public boolean equals(@Nonnull Command c) {
+	public boolean equals(Command c) {
 		return this.keyword.equals(c.keyword);
 	}
 

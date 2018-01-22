@@ -7,15 +7,13 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import javax.annotation.Nonnull;
-
 public class Reveal extends Command {
 	public Reveal() {
 		super("reveal", "Vote to share usernames with your partner.", CmdFlag.IN_CONVERSATION, CmdFlag.FREE_USE);
 	}
 
 	@Override
-	public MessageBuilder run(@Nonnull MessageReceivedEvent e, @Nonnull MessageBuilder res) {
+	public MessageBuilder run(MessageReceivedEvent e, MessageBuilder res) {
 		User author = e.getAuthor();
 		Conversation c = Matchmaker.getConversationForUser(author);
 

@@ -5,15 +5,13 @@ import moe.xetanai.chattr.entities.Command;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import javax.annotation.Nonnull;
-
 public class Help extends Command {
 	public Help() {
 		super("help", "List commands.", CmdFlag.CONV_AGNOSTIC, CmdFlag.FREE_USE);
 	}
 
 	@Override
-	public MessageBuilder run(@Nonnull MessageReceivedEvent e, @Nonnull MessageBuilder res) {
+	public MessageBuilder run(MessageReceivedEvent e, MessageBuilder res) {
 		boolean authorIsDev = e.getAuthor().getIdLong() == Chattr.DEVID;
 
 		for (Command c : Command.REGISTRY) {

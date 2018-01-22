@@ -7,15 +7,13 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import javax.annotation.Nonnull;
-
 public class CmdSearch extends Command {
 	public CmdSearch() {
 		super("search", "Find a conversation. Add interests after to find people who like similar things.", Command.CmdFlag.NO_CONVERSATION, Command.CmdFlag.FREE_USE);
 	}
 
 	@Override
-	public MessageBuilder run(@Nonnull MessageReceivedEvent e, @Nonnull MessageBuilder res) {
+	public MessageBuilder run(MessageReceivedEvent e, MessageBuilder res) {
 		User author = e.getAuthor();
 		Search s = Matchmaker.getSearchForUser(author);
 		String[] args = e.getMessage().getContentRaw().split(" ");
