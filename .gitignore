@@ -2,3 +2,5 @@
 .gradle/*
 out/*
 config.json
+autoinc.xml
+build.number

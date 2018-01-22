@@ -28,6 +28,10 @@ public class Chattr {
 		logger.info("Starting Chattr.");
 
 		JSONObject config = null;
+		if (ChattrInfo.isDevVersion()) {
+			logger.info("DEVELOPMENT MODE");
+			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+		}
 
 		try {
 			String configfile = FileUtils.readFileToString(new File("config.json"), "UTF-8");
