@@ -1,6 +1,7 @@
 .idea/*
 .gradle/*
 out/*
+build/*
 config.json
 autoinc.xml
 build.number

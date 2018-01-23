@@ -1,12 +1,13 @@
 plugins {
-    id'java'
-    id'idea'
-    id'application'
-    id'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 group 'moe.xetanai.chattr'
-version '0.0'
+version '0.1.1'
+mainClassName = 'moe.xetanai.chattr.Chattr'
 
 sourceCompatibility = 1.8
 
