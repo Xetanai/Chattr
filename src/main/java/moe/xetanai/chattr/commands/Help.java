@@ -1,6 +1,6 @@
 package moe.xetanai.chattr.commands;
 
-import moe.xetanai.chattr.Chattr;
+import moe.xetanai.chattr.ChattrInfo;
 import moe.xetanai.chattr.entities.Command;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -12,7 +12,7 @@ public class Help extends Command {
 
 	@Override
 	public MessageBuilder run(MessageReceivedEvent e, MessageBuilder res) {
-		boolean authorIsDev = e.getAuthor().getIdLong() == Chattr.DEVID;
+		boolean authorIsDev = ChattrInfo.isDeveloper(e.getAuthor());
 
 		for (Command c : Command.REGISTRY) {
 			if (c.isDeveloperOnly()) {

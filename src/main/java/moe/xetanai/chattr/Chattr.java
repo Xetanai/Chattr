@@ -37,7 +37,6 @@ import java.io.IOException;
 public class Chattr {
 	private static final Logger logger = LoggerFactory.getLogger("Chattr");
 
-	public static final long DEVID = 155490847494897664L;
 	public static JDA API;
 	public static JSONObject RAWCFG = null;
 
@@ -68,6 +67,7 @@ public class Chattr {
 
 		registerCommands();
 		Matchmaker.start();
+		ChattrInfo.init();
 		Chattr.API.getPresence().setStatus(OnlineStatus.ONLINE);
 	}
 

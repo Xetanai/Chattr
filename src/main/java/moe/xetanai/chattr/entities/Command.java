@@ -1,6 +1,6 @@
 package moe.xetanai.chattr.entities;
 
-import moe.xetanai.chattr.Chattr;
+import moe.xetanai.chattr.ChattrInfo;
 import moe.xetanai.chattr.Matchmaker;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
@@ -64,7 +64,7 @@ public abstract class Command {
 		if (this.inConv == 1 && conv == null) {
 			res.append("You can only use this command while in a conversation.\n");
 		}
-		if (this.developerOnly && Chattr.DEVID != author.getIdLong()) {
+		if (this.developerOnly && ChattrInfo.isDeveloper(author)) {
 			res.append("Only the developer of Chattr may use this command.\n");
 		}
 

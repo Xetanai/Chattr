@@ -2,6 +2,7 @@ package moe.xetanai.chattr;
 
 import moe.xetanai.chattr.entities.Conversation;
 import moe.xetanai.chattr.entities.Search;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Matchmaker {
-	private static final long MAXTIME = 30000; // 30 seconds
+	private static final long MAXTIME = 60000; // 30 seconds
 	private static final List<Search> searches = new CopyOnWriteArrayList<>();
 	private static final List<Conversation> conversations = new ArrayList<>();
 	private static final Logger log = LoggerFactory.getLogger("Matchmaker");
@@ -19,10 +20,11 @@ public class Matchmaker {
 	private static final Thread passiveMatchmaker = new Thread(() -> {
 		boolean interrupted = false;
 		log.info("Passive matchmaker thread started.");
+
 		while (!interrupted) {
 			run();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException err) {
 				log.error("Matchmaker thread was interrupted! Passive matchmaking may fail.", err);
 				interrupted = true;
@@ -114,5 +116,6 @@ public class Matchmaker {
 		}
 
 		searches.removeAll(completedMatches); // Remove completed matches from the search queue now that we're finished iterating.
+		Chattr.API.getPresence().setGame(Game.playing((conversations.size() * 2) + "people chatting."));
 	}
 }
