@@ -11,7 +11,7 @@ public class ChattrInfo {
 	public static final int VERSION_MAJOR = 0;
 	public static final int VERSION_MINOR = 2;
 	public static final int VERSION_PATCH = 0;
-	public static final int BUILD = 36;
+	public static final int BUILD = 39;
 	public static final String VERSION = String.format("%d.%d.%d_%d", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, BUILD);
 
 	public static final List<Long> devs = new ArrayList<>();
