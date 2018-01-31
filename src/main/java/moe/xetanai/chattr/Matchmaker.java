@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -18,6 +19,7 @@ public class Matchmaker {
 	private static final List<Search> searches = new CopyOnWriteArrayList<>();
 	private static final List<Conversation> conversations = new ArrayList<>();
 	private static final Logger log = LoggerFactory.getLogger("Matchmaker");
+	private static long lastPresence = 0;
 
 	private static final Thread passiveMatchmaker = new Thread(() -> {
 		boolean interrupted = false;
@@ -124,6 +126,9 @@ public class Matchmaker {
 		}
 
 		searches.removeAll(completedMatches); // Remove completed matches from the search queue now that we're finished iterating.
-		Chattr.API.getPresence().setGame(Game.playing((conversations.size() * 2) + "people chatting."));
+		if (new Date().getTime() - lastPresence >= 10) { // Every 10 seconds
+			Chattr.API.getPresence().setGame(Game.playing((conversations.size() * 2) + " people chatting."));
+			lastPresence = new Date().getTime();
+		}
 	}
 }
