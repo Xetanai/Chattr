@@ -22,6 +22,7 @@ import io.sentry.Sentry;
 import io.sentry.SentryClient;
 import moe.xetanai.chattr.commands.*;
 import moe.xetanai.chattr.listeners.CommandListener;
+import moe.xetanai.chattr.listeners.OnlineOnlyListener;
 import moe.xetanai.chattr.listeners.PMRelay;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -66,6 +67,7 @@ public class Chattr {
 			Chattr.API = new JDABuilder(AccountType.BOT).setToken(RAWCFG.getString("token"))
 					.addEventListener(new CommandListener())
 					.addEventListener(new PMRelay())
+					.addEventListener(new OnlineOnlyListener())
 					.setStatus(OnlineStatus.IDLE)
 					.buildAsync();
 		} catch (IOException | JSONException err) {

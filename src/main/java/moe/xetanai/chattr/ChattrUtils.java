@@ -1,9 +1,20 @@
 package moe.xetanai.chattr;
 
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.User;
+
 import java.util.List;
 
 public class ChattrUtils {
 	private ChattrUtils() {}
+
+	public static Member getFirstMemberFor(User u) {
+		List<Guild> guilds = u.getMutualGuilds();
+		if (guilds.isEmpty()) {return null;}
+
+		return guilds.get(0).getMember(u);
+	}
 
 	public static String joinList(String delim, List list, int limit) {
 		String joined = "";

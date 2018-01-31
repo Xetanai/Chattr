@@ -2,7 +2,9 @@ package moe.xetanai.chattr;
 
 import moe.xetanai.chattr.entities.Conversation;
 import moe.xetanai.chattr.entities.Search;
+import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +103,12 @@ public class Matchmaker {
 				if (completedMatches.contains(p)) {
 					continue;
 				} // We've already matched this user in this run. Awaiting removal.
+
+
+				Member m = ChattrUtils.getFirstMemberFor(p.getUser());
+				if (m == null || m.getOnlineStatus() != OnlineStatus.ONLINE) {
+					continue; // Skip offline users.
+				}
 
 				if (s.equals(p)) {continue;} // Skip self
 				double partnerMinCompat = p.getMinimumCompatibility();
