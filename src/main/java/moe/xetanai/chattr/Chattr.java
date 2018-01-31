@@ -16,6 +16,8 @@
 
 package moe.xetanai.chattr;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import moe.xetanai.chattr.commands.*;
 import moe.xetanai.chattr.listeners.CommandListener;
 import moe.xetanai.chattr.listeners.PMRelay;
@@ -27,7 +29,6 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
@@ -35,7 +36,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Chattr {
-	private static final Logger logger = LoggerFactory.getLogger("Chattr");
+	private static final Logger logger = (Logger) LoggerFactory.getLogger("Chattr");
 
 	public static JDA API;
 	public static JSONObject RAWCFG = null;
@@ -43,8 +44,8 @@ public class Chattr {
 	public static void main(String[] args) {
 		logger.info("Starting Chattr.");
 		if (ChattrInfo.isDevVersion()) {
-			logger.info("DEVELOPMENT MODE");
-			System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+			logger.debug("DEVELOPMENT MODE");
+			logger.setLevel(Level.DEBUG);
 		}
 
 		try {

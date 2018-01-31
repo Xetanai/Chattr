@@ -32,7 +32,7 @@ public class Matchmaker {
 		}
 
 		Thread.currentThread().interrupt();
-	});
+	}, "Chattr Matchmaker");
 
 	private Matchmaker() {}
 

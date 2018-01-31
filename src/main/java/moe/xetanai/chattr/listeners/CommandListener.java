@@ -1,12 +1,16 @@
 package moe.xetanai.chattr.listeners;
 
+import ch.qos.logback.classic.Logger;
 import moe.xetanai.chattr.Chattr;
 import moe.xetanai.chattr.entities.Command;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.slf4j.LoggerFactory;
 
 public class CommandListener extends ListenerAdapter {
+	private static final Logger log = (Logger) LoggerFactory.getLogger(CommandListener.class);
+
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		String contents = event.getMessage().getContentRaw();
