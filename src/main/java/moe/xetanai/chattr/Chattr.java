@@ -18,6 +18,8 @@ package moe.xetanai.chattr;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import io.sentry.Sentry;
+import io.sentry.SentryClient;
 import moe.xetanai.chattr.commands.*;
 import moe.xetanai.chattr.listeners.CommandListener;
 import moe.xetanai.chattr.listeners.PMRelay;
@@ -43,6 +45,14 @@ public class Chattr {
 
 	public static void main(String[] args) {
 		logger.info("Starting Chattr.");
+
+		SentryClient sc = Sentry.init("https://0aa6ad1afb2b49fab85e53424f03415e:83407b94e118469d80e0fa6fb0345ca0@sentry.io/280049?stacktrace.app.packages=moe.xetanai.chattr");
+		sc.setRelease(ChattrInfo.VERSION);
+		if (ChattrInfo.isDevVersion()) {
+			sc.setEnvironment("development");
+		}
+
+
 		if (ChattrInfo.isDevVersion()) {
 			logger.debug("DEVELOPMENT MODE");
 			logger.setLevel(Level.DEBUG);
@@ -60,9 +70,11 @@ public class Chattr {
 					.buildAsync();
 		} catch (IOException | JSONException err) {
 			logger.error("Failed to load config.", err);
+			Sentry.capture(err);
 			System.exit(1);
 		} catch (LoginException | RateLimitedException err) {
 			logger.error("Failed to login.", err);
+			Sentry.capture(err);
 			System.exit(2);
 		}
 

@@ -1,6 +1,7 @@
 package moe.xetanai.chattr.listeners;
 
 import ch.qos.logback.classic.Logger;
+import io.sentry.Sentry;
 import moe.xetanai.chattr.Chattr;
 import moe.xetanai.chattr.entities.Command;
 import net.dv8tion.jda.core.entities.User;
@@ -24,7 +25,13 @@ public class CommandListener extends ListenerAdapter {
 
 		for (Command c : Command.REGISTRY) {
 			if (c.getKeyword().equals(keyword)) { // Find the command with this keyword, if any.
-				c.invoke(event);
+				try {
+					c.invoke(event);
+				} catch (Exception err) {
+					log.error("Command " + c.getKeyword() + " threw an uncaught exception!");
+					err.printStackTrace();
+					Sentry.capture(err);
+				}
 			}
 		}
 	}

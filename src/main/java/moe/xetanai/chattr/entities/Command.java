@@ -1,5 +1,6 @@
 package moe.xetanai.chattr.entities;
 
+import io.sentry.Sentry;
 import moe.xetanai.chattr.ChattrInfo;
 import moe.xetanai.chattr.Matchmaker;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -68,9 +69,15 @@ public abstract class Command {
 			res.append("Only the developer of Chattr may use this command.\n");
 		}
 
-		if (res.isEmpty()) // There were no permissions warnings; The user is allowed.
-			this.run(e, res);
-
+		if (res.isEmpty()) {// There were no permissions warnings; The user is allowed.
+			try {
+				this.run(e, res);
+			} catch (Exception err) {
+				this.log.error("Threw an uncaught exception.");
+				err.printStackTrace();
+				Sentry.capture(err);
+			}
+		}
 		if (res.isEmpty()) {return;}
 		res.sendTo(e.getChannel()).queue(); // Reply.
 	}
